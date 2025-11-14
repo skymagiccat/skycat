@@ -11,7 +11,6 @@ on:
     branches: [ main ]
   workflow_dispatch:
 
-# 明确给 workflow 写 packages 的权限（虽然我们用 PAT，但保留这个也无害）
 permissions:
   contents: read
   packages: write
@@ -29,17 +28,16 @@ jobs:
         with:
           registry: ghcr.io
           username: ${{ github.actor }}
-          # 使用你在仓库 Secrets 中添加的 PAT（名字必须是 CR_PAT）
-          password: ${{ secrets.CR_PAT }}
+          password: ${{ secrets.skycat_pat }}
 
-      - name: Set up QEMU (optional, for multi-arch)
+      - name: Set up QEMU (if needed)
         uses: docker/setup-qemu-action@v2
 
       - name: Set up Docker Buildx
         uses: docker/setup-buildx-action@v3
 
       - name: Build and push Docker image
-        uses: docker/build-push-action@v4
+        uses: docker/build-push-action@v5
         with:
           context: .
           push: true
